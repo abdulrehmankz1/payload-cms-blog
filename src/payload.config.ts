@@ -22,7 +22,7 @@ export default buildConfig({
     },
   },
   collections: [Posts, Categories, Media, Users],
-  editor: lexicalEditor(),
+  editor: lexicalEditor(), // ✅ Global default editor
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
@@ -33,6 +33,6 @@ export default buildConfig({
   sharp,
   plugins: [
     payloadCloudPlugin(),
-    // storage-adapter-placeholder if you want to add a custom storage adapter
+    // storage-adapter-placeholder
   ],
 })
