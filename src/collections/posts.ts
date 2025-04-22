@@ -1,4 +1,5 @@
 import { CollectionConfig, CollectionSlug } from 'payload'
+import { lexicalEditor } from '@payloadcms/richtext-lexical' // ✅ Import editor here too
 
 const Posts: CollectionConfig = {
   slug: 'posts',
@@ -15,6 +16,7 @@ const Posts: CollectionConfig = {
       name: 'content',
       type: 'richText',
       required: true,
+      editor: lexicalEditor(),
     },
     {
       name: 'featuredImage',
@@ -25,7 +27,7 @@ const Posts: CollectionConfig = {
     {
       name: 'categories',
       type: 'relationship',
-      relationTo: 'categories' as CollectionSlug, // Explicitly casting to CollectionSlug
+      relationTo: 'categories' as CollectionSlug,
       hasMany: true,
       required: true,
     },
