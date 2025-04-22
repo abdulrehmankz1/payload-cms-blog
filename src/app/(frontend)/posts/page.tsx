@@ -1,5 +1,3 @@
-'use server'
-
 import React from 'react'
 import { getPayload } from 'payload'
 import config from '@/payload.config'
@@ -33,7 +31,7 @@ export default async function PostsPage() {
             <Image
               src={post.featuredImage.url}
               alt={post.featuredImage.alt || ''}
-              className="mt-3 w-full max-w-sm rounded"
+              className="mt-3 w-full rounded"
               height={100}
               width={100}
             />

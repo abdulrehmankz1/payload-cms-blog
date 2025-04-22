@@ -1,7 +1,7 @@
-import { CollectionConfig, CollectionSlug } from 'payload'
-import { lexicalEditor } from '@payloadcms/richtext-lexical' // ✅ Import editor here too
+import { lexicalEditor } from '@payloadcms/richtext-lexical';
+import { CollectionConfig, CollectionSlug } from 'payload'; 
 
-const Posts: CollectionConfig = {
+export const Posts: CollectionConfig = {
   slug: 'posts',
   admin: {
     useAsTitle: 'title',
@@ -32,6 +32,4 @@ const Posts: CollectionConfig = {
       required: true,
     },
   ],
-}
-
-export default Posts
+};
