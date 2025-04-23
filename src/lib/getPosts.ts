@@ -1,19 +1,32 @@
 import { getPayload } from 'payload'
 import config from '@/payload.config'
+import { Post } from '@/payload-types'
 
 export async function getPostsAndCategories() {
   const payload = await getPayload({ config })
 
-  // Fetch posts with categories
+  // Fetch posts and categories
   const posts = await payload.find({
     collection: 'posts',
-    depth: 2, // Adjust if needed based on your data structure
+    depth: 2,
   })
 
-  // Fetch categories from the database (assuming there's a 'categories' collection)
   const categories = await payload.find({
     collection: 'categories',
   })
 
   return { posts, categories }
+}
+
+export async function getPostById(postId: string) {
+  const payload = await getPayload({ config })
+
+  // Fetch a single post by ID
+  const post = await payload.findByID({
+    collection: 'posts',
+    id: postId,
+    depth: 2,
+  })
+
+  return post as Post
 }
