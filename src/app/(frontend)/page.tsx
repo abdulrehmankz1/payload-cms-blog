@@ -14,29 +14,35 @@ export default async function HomePage() {
   const { user } = await payload.auth({ headers })
 
   return (
-    <div className="min-h-screen flex justify-center items-center">
-      <div className="flex flex-col items-center text-center px-4">
+    <div className="min-h-screen flex justify-center items-center px-4 sm:px-6 lg:px-8">
+      <div className="w-full max-w-2xl flex flex-col items-center text-center">
         <picture className="mb-5">
           <source srcSet="https://raw.githubusercontent.com/payloadcms/payload/main/packages/ui/src/assets/payload-favicon.svg" />
           <Image
             alt="Payload Logo"
             height={65}
-            src="https://raw.githubusercontent.com/payloadcms/payload/main/packages/ui/src/assets/payload-favicon.svg"
             width={65}
+            src="https://raw.githubusercontent.com/payloadcms/payload/main/packages/ui/src/assets/payload-favicon.svg"
           />
         </picture>
-        {!user && <h1 className="text-4xl font-bold">Welcome to your new project.</h1>}
-        {user && (
-          <h1 className="text-5xl font-bold text-center leading-snug">
-            Welcome back,
-            <br />
-            {user.email}
+
+        {!user && (
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold">
+            Welcome to your new project.
           </h1>
         )}
 
-        <div className="flex items-center gap-3 mt-5">
+        {user && (
+          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-center leading-snug max-w-full sm:max-w-full md:max-w-4xl lg:max-w-4xl">
+            Welcome back,
+            <br />
+            <span className="break-words">{user.email}</span>
+          </h1>
+        )}
+
+        <div className="flex flex-col sm:flex-row items-center gap-3 mt-6">
           <Link
-            className="bg-white text-black border border-black px-3 py-1 rounded hover:bg-gray-100 transition"
+            className="bg-white text-black border border-black px-4 py-2 rounded hover:bg-gray-100 transition w-full sm:w-auto text-center"
             href={payloadConfig.routes.admin}
             rel="noopener noreferrer"
             target="_blank"
@@ -44,7 +50,7 @@ export default async function HomePage() {
             Go to admin panel
           </Link>
           <Link
-            className="bg-black text-white px-3 py-1 rounded hover:underline transition"
+            className="bg-black text-white px-4 py-2 rounded hover:underline transition w-full sm:w-auto text-center"
             href="/posts"
           >
             View All Posts
