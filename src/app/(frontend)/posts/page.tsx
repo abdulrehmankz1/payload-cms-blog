@@ -14,70 +14,94 @@ type PostsPageProps = {
 }
 
 export default async function PostsPage({ searchParams }: PostsPageProps) {
-  // Get all posts and categories from the server
   const { posts, categories } = await getPostsAndCategories()
-
-  // Access docs property for posts and categories
   const postDocs = posts.docs
   const categoryDocs = categories.docs
 
-  // Filter posts by category if a category is selected
-  const filteredPosts = searchParams.category
+  // Get the category from searchParams
+  const category = searchParams?.category
+
+  const filteredPosts = category
     ? postDocs.filter((post: ExtendedPost) =>
-        post.categories?.some(
-          (cat) => typeof cat === 'object' && cat.name === searchParams.category,
-        ),
+        post.categories?.some((cat) => typeof cat === 'object' && cat.name === category),
       )
     : postDocs
 
   return (
-    <div className="p-4">
-      <h1 className="text-3xl font-bold mb-4">All Posts</h1>
+    <div className="p-4 max-w-7xl mx-auto">
+      <h1 className="text-3xl font-bold mb-6 text-white text-center">All Posts</h1>
 
-      {/* Filter: Categories */}
-      <div className="mb-4">
-        <button className="mr-4 text-blue-500">
-          <Link href="/posts">All Posts</Link>
-        </button>
-        {categoryDocs.map((category: Category) => (
-          <button key={category.id} className="mr-4 text-blue-500">
-            <Link href={`/posts?category=${category.name}`}>{category.name}</Link>
-          </button>
+      {/* Category Filters - Updated with better mobile spacing */}
+      <div className="flex flex-wrap justify-start sm:justify-center gap-y-2 gap-x-2 mb-8 px-2 sm:px-0">
+        <Link href="/posts" className="mb-2 sm:mb-0">
+          <span
+            className={`text-sm px-4 py-2 border border-gray-600 rounded cursor-pointer transition ${
+              !category ? 'bg-white text-gray-800' : 'bg-gray-800 text-white hover:bg-gray-700'
+            }`}
+          >
+            All Posts
+          </span>
+        </Link>
+        {categoryDocs.map((categoryItem: Category) => (
+          <Link
+            key={categoryItem.id}
+            href={`/posts?category=${categoryItem.name}`}
+            className="mb-2 sm:mb-0"
+          >
+            <span
+              className={`text-sm px-4 py-2 border border-gray-600 rounded cursor-pointer transition ${
+                category === categoryItem.name
+                  ? 'bg-white text-gray-800'
+                  : 'bg-gray-800 text-white hover:bg-gray-700'
+              }`}
+            >
+              {categoryItem.name}
+            </span>
+          </Link>
         ))}
       </div>
 
-      {/* Render filtered posts */}
-      {filteredPosts.map((post: ExtendedPost) => (
-        <div key={post.id} className="border p-4 mb-4 bg-white rounded shadow">
-          <h2 className="text-xl font-semibold">{post.title}</h2>
-
-          <p className="text-gray-500 text-sm">
-            Posted on {new Date(post.createdAt).toLocaleDateString()}
-          </p>
-
-          <div className="mt-1">
-            <strong>Categories:</strong>{' '}
-            {post.categories
-              ?.map((cat) => (typeof cat === 'object' && 'name' in cat ? cat.name : ''))
-              .filter(Boolean)
-              .join(', ') || 'None'}
+      {/* Posts Grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {filteredPosts.map((post: ExtendedPost) => (
+          <div key={post.id} className="h-full">
+            <div className="flex flex-col h-full border-2 border-gray-800 rounded-lg overflow-hidden bg-gray-900">
+              {typeof post.featuredImage === 'object' && post.featuredImage?.url && (
+                <Image
+                  src={post.featuredImage.url}
+                  alt={post.featuredImage.alt || ''}
+                  className="h-48 w-full object-fill object-center"
+                  height={192}
+                  width={320}
+                />
+              )}
+              <div className="p-6 flex flex-col justify-between flex-1">
+                <div>
+                  <h2 className="tracking-widest text-xs title-font font-medium text-gray-500 mb-1">
+                    Category:{' '}
+                    {post.categories
+                      ?.map((cat) => (typeof cat === 'object' && 'name' in cat ? cat.name : ''))
+                      .filter(Boolean)
+                      .join(', ') || 'Uncategorized'}
+                  </h2>
+                  <h1 className="title-font text-lg font-medium text-white mb-3">{post.title}</h1>
+                  <p className="leading-relaxed text-gray-300 mb-3">
+                    Posted on {new Date(post.createdAt).toLocaleDateString()}
+                  </p>
+                </div>
+                <div className="mt-auto">
+                  <Link
+                    href={`/posts/${post.id}`}
+                    className="text-indigo-400 inline-flex items-center hover:underline"
+                  >
+                    Learn More &#x2192;
+                  </Link>
+                </div>
+              </div>
+            </div>
           </div>
-
-          {typeof post.featuredImage === 'object' && post.featuredImage?.url && (
-            <Image
-              src={post.featuredImage.url}
-              alt={post.featuredImage.alt || ''}
-              className="mt-3 w-full rounded"
-              height={200}
-              width={300}
-            />
-          )}
-
-          <Link href={`/posts/${post.id}`} className="text-blue-500 underline mt-2 inline-block">
-            See full post
-          </Link>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   )
 }
